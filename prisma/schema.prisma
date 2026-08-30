@@ -1,0 +1,72 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. User Model (Admin aur Customers ke liye)
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("USER")
+  createdAt DateTime @default(now())
+}
+
+// 2. Product Model (Complete Bags details ke liye)
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String   @db.Text
+  price       Float
+  images      Json     
+  colors      Json     
+  category    String   @default("Luxury")
+  createdAt   DateTime @default(now())
+  rating      Float    @default(5.0)
+  priority    Int      @default(0)      // Display priority (lower = first)
+  
+  // --- NEW FIELDS ADDED ---
+  stockStatus String   @default("in-stock")  // in-stock, low-stock, out-of-stock
+  discount    Int      @default(0)           // Discount percentage (0-100)
+  featured    Boolean  @default(false)       // Featured product or not
+  
+  updatedAt   DateTime @updatedAt
+}
+
+// 3. Order Model (LadyNest Orders)
+model Order {
+  id              Int      @id @default(autoincrement())
+  customerName    String
+  email           String?
+  phone           String
+  address         String   @db.Text
+  city            String   @default("Pakistan")
+  
+  // Product Details
+  productName     String
+  colorSelected   String
+  quantity        Int      @default(1)
+  totalPrice      Float
+  
+  // Order Management
+  status          String   @default("PENDING") // PENDING, CONFIRMED, SHIPPED, DELIVERED, CANCELLED
+  paymentMethod   String   @default("COD")     // Cash on Delivery
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+// 4. Contact Messages Model
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String?
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+}

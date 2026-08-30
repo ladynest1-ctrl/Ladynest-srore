@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* --- Performance & Typography Optimization --- */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2) format('woff2');
+}
+
+:root {
+  --background: #F2F2F2;
+  --soft-grey: #E8E8E8;
+  --dark-accent: #0A0A0A;
+  --luxury-gold: #D4AF37;
+  --foreground: #111111;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed; 
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  /* --- Hero Image Logic --- */
+  .hero-container {
+    @apply relative w-full overflow-hidden;
+    height: 60vh;
+    contain: layout style; 
+  }
+
+  .hero-image {
+    @apply w-full h-full object-cover;
+    object-position: center; 
+    transform: translateZ(0); 
+  }
+
+  .section-ash {
+    background-color: var(--soft-grey);
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+  }
+
+  .header-footer-dark {
+    background-color: var(--dark-accent);
+    color: #FFFFFF;
+  }
+
+  .btn-gold {
+    background-color: var(--luxury-gold);
+    @apply text-black px-6 py-3 font-semibold uppercase tracking-widest transition-transform duration-200 active:scale-95 hover:opacity-90;
+    will-change: transform;
+  }
+
+  footer {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 300px;
+  }
+}
+
+/* --- Swiper Customization (Dots & Navigation) --- */
+/* Yahan hum manual CSS use kar rahe hain taake Tailwind build error na de */
+
+.swiper-pagination-bullet {
+  background-color: #000000 !important;
+  opacity: 0.2 !important;
+  width: 6px !important;
+  height: 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #000000 !important;
+  opacity: 1 !important;
+  width: 24px !important; /* Active dot lamba hoga */
+  border-radius: 12px !important;
+}
+
+/* Navigation arrows styling */
+.swiper-button-next, .swiper-button-prev {
+  color: #000000 !important;
+}
+
+.swiper-button-next::after, .swiper-button-prev::after {
+  font-size: 16px !important;
+  font-weight: bold !important;
+}
+
+/* --- Mobile Specific Tweaks --- */
+@media (max-width: 768px) {
+  .hero-container {
+    height: 45vh;
+  }
+  
+  .swiper-pagination-bullet {
+    width: 5px !important;
+    height: 5px !important;
+  }
+  
+  .swiper-pagination-bullet-active {
+    width: 18px !important;
+  }
+}
