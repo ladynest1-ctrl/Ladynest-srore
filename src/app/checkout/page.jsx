@@ -23,11 +23,9 @@ export default function CheckoutPage() {
     setMounted(true);
   }, []);
 
-  // --- SYNCED IMAGE LOGIC ---
   const getProductImage = (item) => {
     try {
       const imgs = typeof item.images === 'string' ? JSON.parse(item.images) : (item.images || []);
-      // Context se aya hua imageIndex use karein
       const idx = item.imageIndex !== undefined ? item.imageIndex : 0;
       return imgs[idx] || imgs[0] || "/placeholder-bag.jpg";
     } catch (e) { 
@@ -47,18 +45,18 @@ export default function CheckoutPage() {
 
   const sendWhatsAppMessage = (isProofRequest = false) => {
     const phoneNumber = "923214453830"; 
-    const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(", ");
+    const itemsList = cart.map(item => ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join(", ");
     const baseUrl = "https://api.whatsapp.com/send";
     let message = "";
 
     if (isProofRequest) {
       const accountTitle = formData.paymentMethod === 'bank' ? 'RAFI TRADERS' : 'RANA ASIM RAFI';
-      message = `*PAYMENT PROOF - LadyNest*\n\nHi, I am sharing the payment screenshot.\n*Name:* ${formData.firstName}\n*Method:* ${formData.paymentMethod.toUpperCase()}\n*To Account:* ${accountTitle}\n*Total Paid:* Rs. ${total.toLocaleString()}`;
+      message = *PAYMENT PROOF - LadyNest*\n\nHi, I am sharing the payment screenshot.\n*Name:* ${formData.firstName}\n*Method:* ${formData.paymentMethod.toUpperCase()}\n*To Account:* ${accountTitle}\n*Total Paid:* Rs. ${total.toLocaleString()};
     } else {
-      message = `*NEW ORDER - LadyNest*\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Phone:* ${formData.phone}\n*Address:* ${formData.billingAddress}, ${formData.billingCity}\n*Method:* ${formData.paymentMethod.toUpperCase()}\n*Total Bill:* Rs. ${total.toLocaleString()}\n*Items:* ${itemsList}\n*Notes:* ${formData.orderNotes}\n\n_Sent via Website Checkout_`;
+      message = *NEW ORDER - LadyNest*\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Phone:* ${formData.phone}\n*Address:* ${formData.billingAddress}, ${formData.billingCity}\n*Method:* ${formData.paymentMethod.toUpperCase()}\n*Total Bill:* Rs. ${total.toLocaleString()}\n*Items:* ${itemsList}\n*Notes:* ${formData.orderNotes}\n\n_Sent via Website Checkout_;
     }
 
-    window.open(`${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
+    window.open(${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}, '_blank');
   };
 
   const handleSubmit = async (e) => {
@@ -69,11 +67,11 @@ export default function CheckoutPage() {
 
     try {
       const orderData = {
-        customerName: `${formData.firstName} ${formData.lastName}`,
+        customerName: ${formData.firstName} ${formData.lastName},
         email: formData.email,
         phone: formData.phone,
-        address: `${formData.billingAddress}, ${formData.billingCity}`,
-        productName: cart.map(item => `${item.name} (${item.selectedColor || 'Standard'})`).join(", "),
+        address: ${formData.billingAddress}, ${formData.billingCity},
+        productName: cart.map(item => ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join(", "),
         totalPrice: total,
         deliveryCharges,
         paymentMethod: formData.paymentMethod,
@@ -87,14 +85,18 @@ export default function CheckoutPage() {
       });
 
       if (response.ok) {
-        if (formData.paymentMethod !== 'cod') sendWhatsAppMessage();
+        if (formData.paymentMethod !== 'cod') {
+          sendWhatsAppMessage();
+        }
         setOrderPlaced(true);
         clearCart();
       } else {
-        alert("Server Error! Please try again.");
+        const errorData = await response.json();
+        alert(Order placement failed: ${errorData.error || "Server Error"});
       }
     } catch (error) {
-      alert("Network Error.");
+      console.error("Submission error:", error);
+      alert("Network Error! Please check your internet connection.");
     } finally {
       setIsSubmitting(false);
     }
@@ -144,7 +146,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* 02. Optional Notes (Ab Required nahi hai kyunke color already selected hai) */}
+              {/* 02. Extra Notes */}
               <div className="bg-white p-8 border border-gray-100 shadow-sm">
                 <h2 className="text-xs font-bold mb-6 uppercase tracking-[0.2em] flex items-center gap-3 text-black">
                   <span className="w-6 h-6 bg-black text-white flex items-center justify-center rounded-full text-[10px]">02</span> Extra Notes
@@ -164,19 +166,19 @@ export default function CheckoutPage() {
                   <span className="w-6 h-6 bg-black text-white flex items-center justify-center rounded-full text-[10px]">03</span> Payment Method
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <label className={`flex flex-col items-center justify-center p-4 border cursor-pointer transition-all ${formData.paymentMethod === 'cod' ? 'border-black bg-gray-50' : 'border-gray-100 opacity-40'}`}>
+                  <label className={flex flex-col items-center justify-center p-4 border cursor-pointer transition-all ${formData.paymentMethod === 'cod' ? 'border-black bg-gray-50' : 'border-gray-100 opacity-40'}}>
                     <Truck size={20} className="mb-2 text-black" />
                     <input type="radio" name="paymentMethod" value="cod" onChange={handleChange} className="hidden" />
                     <span className="text-[9px] font-black uppercase tracking-widest text-center text-black">Cash On Delivery</span>
                   </label>
                   
-                  <label className={`flex flex-col items-center justify-center p-4 border cursor-pointer transition-all ${formData.paymentMethod === 'bank' ? 'border-black bg-gray-50' : 'border-gray-100 opacity-40'}`}>
+                  <label className={flex flex-col items-center justify-center p-4 border cursor-pointer transition-all ${formData.paymentMethod === 'bank' ? 'border-black bg-gray-50' : 'border-gray-100 opacity-40'}}>
                     <Building2 size={20} className="mb-2 text-black" />
                     <input type="radio" name="paymentMethod" value="bank" onChange={handleChange} className="hidden" />
                     <span className="text-[9px] font-black uppercase tracking-widest text-center text-black">Bank Transfer</span>
                   </label>
 
-                  <label className={`flex flex-col items-center justify-center p-4 border cursor-pointer transition-all ${formData.paymentMethod === 'jazzcash' ? 'border-black bg-gray-50' : 'border-gray-100 opacity-40'}`}>
+                  <label className={flex flex-col items-center justify-center p-4 border cursor-pointer transition-all ${formData.paymentMethod === 'jazzcash' ? 'border-black bg-gray-50' : 'border-gray-100 opacity-40'}}>
                     <Smartphone size={20} className="mb-2 text-black" />
                     <input type="radio" name="paymentMethod" value="jazzcash" onChange={handleChange} className="hidden" />
                     <span className="text-[9px] font-black uppercase tracking-widest text-center text-black">JazzCash</span>
@@ -210,7 +212,7 @@ export default function CheckoutPage() {
             </form>
           </div>
 
-          {/* Sidebar Summary (With Color Specific Images) */}
+          {/* Sidebar Summary */}
           <div className="lg:col-span-5">
             <div className="bg-white p-8 border border-gray-100 shadow-sm sticky top-24">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.3em] mb-8 border-b border-black/10 pb-4 text-black">Your Selection</h3>
