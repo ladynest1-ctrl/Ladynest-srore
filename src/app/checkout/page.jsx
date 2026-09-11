@@ -45,18 +45,20 @@ export default function CheckoutPage() {
 
   const sendWhatsAppMessage = (isProofRequest = false) => {
     const phoneNumber = "923214453830";
-    const itemsList = cart.map(item =>`` ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join('\n');
+    const itemsList = cart.map(item => * ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity} - Rs. ${item.price * item.quantity}).join('\n');
+
     const baseUrl = "https://api.whatsapp.com/send";
     let message = "";
 
     if (isProofRequest) {
       const accountTitle = formData.paymentMethod === 'bank' ? 'RAFI TRADERS' : 'RANA ASIM RAFI';
-      message = *PAYMENT PROOF - LadyNest*\n\nHi, I am sharing the payment screenshot.\n*Name:* ${formData.firstName}\n*Method:* ${formData.paymentMethod.toUpperCase()}\n*To Account:* ${accountTitle}\n*Total Paid:* Rs. ${total.toLocaleString()};
+      message = *PAYMENT PROOF - LadyNest*\n\nHi, I am sharing the payment screenshot.\n*Name:* ${formData.firstName} ${formData.lastName}\n*Phone:* ${formData.phone}\n*Amount:* Rs. ${total}\n*Account:* ${accountTitle}\n\n*Order Details:*\n${itemsList};
     } else {
-      message = *NEW ORDER - LadyNest*\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Phone:* ${formData.phone}\n*Address:* ${formData.billingAddress}, ${formData.billingCity}\n*Method:* ${formData.paymentMethod.toUpperCase()}\n*Total Bill:* Rs. ${total.toLocaleString()}\n*Items:* ${itemsList}\n*Notes:* ${formData.orderNotes}\n\n_Sent via Website Checkout_;
+      message = *NEW ORDER - LadyNest*\n\n*Name:* ${formData.firstName} ${formData.lastName}\n*Phone:* ${formData.phone}\n*City:* ${formData.city}\n*Address:* ${formData.address}\n*Payment Method:* ${formData.paymentMethod}\n\n*Items:*\n${itemsList}\n\n*Subtotal:* Rs. ${subtotal}\n*Delivery Charges:* Rs. ${deliveryCharges}\n*Total Bill:* Rs. ${total};
     }
 
     window.open(${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}, '_blank');
+  };
   };
 
   const handleSubmit = async (e) => {
