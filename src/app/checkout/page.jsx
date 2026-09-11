@@ -14,8 +14,13 @@ export default function CheckoutPage() {
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const deliveryCharges = 300;
   const total = subtotal + deliveryCharges;
-
-  const cities = ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala"];
+const handleWhatsAppSend = (isProofRequest = false) => {
+    const phoneNumber = "923214453830";
+const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
+    const baseUrl = "https://api.whatsapp.com/send";
+    let message = `Order Details: ${itemsList}`;
+    window.open(`${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
+    const cities = ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala"];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,8 +50,13 @@ export default function CheckoutPage() {
           <span>Subtotal</span>
           <span className="text-black font-black">Rs. {subtotal.toLocaleString()}</span>
         </div>
-        <div className="flex justify-between text-[10px] uppercase tracking-[0.2em] text-black font-bold">
-          <span>Delivery</span>
+const sendWhatsAppMessage = (isProofRequest = false) => {
+  const phoneNumber = "923214453830";
+  const itemsList = cart.map(item => ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join(', ');
+  const baseUrl = "https://api.whatsapp.com/send";
+  let message = "";
+  // ... rest of your function code
+};          <span>Delivery</span>
           <span className="text-black font-black">Rs. {deliveryCharges}</span>
         </div>
         <div className="flex justify-between pt-6 border-t border-black/10">
