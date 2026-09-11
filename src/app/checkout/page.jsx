@@ -10,13 +10,11 @@ export default function CheckoutPage() {
     address: '',
   });
 
-  // Cart calculations
   const cart = []; 
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const deliveryCharges = 300;
   const total = subtotal + deliveryCharges;
 
-  // Single WhatsApp Handler with correct template literals
   const handleWhatsAppSend = (isProofRequest = false) => {
     const phoneNumber = "923214453830";
     const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
