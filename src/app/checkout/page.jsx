@@ -1,45 +1,35 @@
-"use client";
+'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function CheckoutPage() {
-  const [cart] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    address: '',
     city: 'Lahore',
+    address: '',
   });
 
+  // Cart calculations
+  const cart = []; 
   const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const deliveryCharges = 300;
   const total = subtotal + deliveryCharges;
-const handleWhatsAppSend = (isProofRequest = false) => {
+
+  // Single WhatsApp Handler with correct template literals
+  const handleWhatsAppSend = (isProofRequest = false) => {
     const phoneNumber = "923214453830";
-const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
+    const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
     const baseUrl = "https://api.whatsapp.com/send";
     let message = `Order Details: ${itemsList}`;
+    
     window.open(`${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
-    const cities = ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala"];
+  };
+
+  const cities = ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala"];
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const sendWhatsAppMessage = (isProofRequest = false) => {
-    const phoneNumber = "923214453830";
-    const itemsList = cart.map(item => "* " + item.name + " (" + (item.selectedColor || 'Standard') + ") x" + item.quantity + " - Rs. " + (item.price * item.quantity)).join("\n");
-
-    const baseUrl = "https://api.whatsapp.com/send";
-    let message = "";
-
-    if (isProofRequest) {
-      message = "PAYMENT PROOF - LedyNest\n\nName: " + formData.name + "\nPhone: " + formData.phone + "\nCity: " + formData.city + "\nAddress: " + formData.address + "\n\nItems:\n" + itemsList + "\n\nTotal Bill: Rs. " + total;
-    } else {
-      message = "NEW ORDER - LedyNest\n\nName: " + formData.name + "\nPhone: " + formData.phone + "\nCity: " + formData.city + "\nAddress: " + formData.address + "\n\nItems:\n" + itemsList + "\n\nTotal Bill: Rs. " + total;
-    }
-
-    window.open(baseUrl + "?phone=" + phoneNumber + "&text=" + encodeURIComponent(message), "_blank");
   };
 
   return (
@@ -50,13 +40,8 @@ const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Stand
           <span>Subtotal</span>
           <span className="text-black font-black">Rs. {subtotal.toLocaleString()}</span>
         </div>
-const sendWhatsAppMessage = (isProofRequest = false) => {
-  const phoneNumber = "923214453830";
-  const itemsList = cart.map(item => ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join(', ');
-  const baseUrl = "https://api.whatsapp.com/send";
-  let message = "";
-  // ... rest of your function code
-};          <span>Delivery</span>
+        <div className="flex justify-between text-[10px] uppercase tracking-[0.2em] text-black font-bold">
+          <span>Delivery</span>
           <span className="text-black font-black">Rs. {deliveryCharges}</span>
         </div>
         <div className="flex justify-between pt-6 border-t border-black/10">
@@ -64,6 +49,13 @@ const sendWhatsAppMessage = (isProofRequest = false) => {
           <span className="text-2xl font-serif text-[#C5A25D] font-bold">Rs. {total.toLocaleString()}</span>
         </div>
       </div>
+
+      <button 
+        onClick={() => handleWhatsAppSend(false)} 
+        className="mt-6 w-full bg-green-600 text-white py-3 rounded-md font-bold uppercase tracking-wider"
+      >
+        Order via WhatsApp
+      </button>
     </div>
   );
 }
