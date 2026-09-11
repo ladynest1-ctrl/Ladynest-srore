@@ -44,9 +44,9 @@ export default function CheckoutPage() {
   };
 
   const sendWhatsAppMessage = (isProofRequest = false) => {
-    const phoneNumber = "923214453830"; 
-    const itemsList = cart.map(item => ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join('\n');
-const baseUrl = "https://api.whatsapp.com/send";
+    const phoneNumber = "923214453830";
+    const itemsList = cart.map(item =>`` ${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}).join('\n');
+    const baseUrl = "https://api.whatsapp.com/send";
     let message = "";
 
     if (isProofRequest) {
