@@ -1,9 +1,8 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { name, phone, city, address, cart, total } = await req.json();
 
     const itemsList = cart && cart.length > 0
