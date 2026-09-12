@@ -63,7 +63,7 @@ export default function CheckoutPage() {
 
         <button
           onClick={handleOrderSubmit}
-          className="mt-6 w-full bg-green-600 text-white py-3 rounded-md font-bold uppercase tracking-wider"
+          className="w-full bg-black text-white py-5 flex items-center justify-center gap-3 font-bold uppercase tracking-wider rounded-md"
         >
           Confirm Order & Send Email
         </button>
