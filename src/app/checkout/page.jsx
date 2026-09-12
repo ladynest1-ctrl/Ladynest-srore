@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function CheckoutPage() {
+  const [mounted, setMounted] = useState(false);
+  const [cart, setCart] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -10,14 +12,27 @@ export default function CheckoutPage() {
     address: '',
   });
 
-  const cart = []; 
-  const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  useEffect(() => {
+    setMounted(true);
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        setCart([]);
+      }
+    }
+  }, []);
+
+  if (!mounted) return null;
+
+  const subtotal = cart.reduce((total, item) => total + (item.price || 0) * (item.quantity || 1), 0);
   const deliveryCharges = 300;
   const total = subtotal + deliveryCharges;
 
-  const handleWhatsAppSend = (isProofRequest = false) => {
+  const handleWhatsAppSend = () => {
     const phoneNumber = "923214453830";
-    const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
+    const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity || 1}`).join(', ');
     const baseUrl = "https://api.whatsapp.com/send";
     let message = `Order Details: ${itemsList}`;
 
@@ -25,10 +40,10 @@ export default function CheckoutPage() {
   };
 
   const handleOrderSubmit = async () => {
-    handleWhatsAppSend(false);
+    handleWhatsAppSend();
 
     try {
-      const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
+      const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity || 1}`).join(', ');
       
       await fetch('/api/send-email', {
         method: 'POST',
@@ -38,10 +53,6 @@ export default function CheckoutPage() {
     } catch (err) {
       console.error("Email send failed:", err);
     }
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
