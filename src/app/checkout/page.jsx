@@ -20,11 +20,25 @@ export default function CheckoutPage() {
     const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
     const baseUrl = "https://api.whatsapp.com/send";
     let message = `Order Details: ${itemsList}`;
-    
+
     window.open(`${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const cities = ["Lahore", "Karachi", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta", "Sialkot", "Gujranwala"];
+  const handleOrderSubmit = async () => {
+    handleWhatsAppSend(false);
+
+    try {
+      const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity}`).join(', ');
+      
+      await fetch('/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemsList, total }),
+      });
+    } catch (err) {
+      console.error("Email send failed:", err);
+    }
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,14 +60,14 @@ export default function CheckoutPage() {
           <span className="text-[11px] uppercase tracking-[0.3em] font-black text-black">Total Bill</span>
           <span className="text-2xl font-serif text-[#C5A25D] font-bold">Rs. {total.toLocaleString()}</span>
         </div>
-      </div>
 
-      <button 
-        onClick={() => handleWhatsAppSend(false)} 
-        className="mt-6 w-full bg-green-600 text-white py-3 rounded-md font-bold uppercase tracking-wider"
-      >
-        Order via WhatsApp
-      </button>
+        <button
+          onClick={handleOrderSubmit}
+          className="mt-6 w-full bg-green-600 text-white py-3 rounded-md font-bold uppercase tracking-wider"
+        >
+          Confirm Order & Send Email
+        </button>
+      </div>
     </div>
   );
 }
