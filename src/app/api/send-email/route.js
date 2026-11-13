@@ -1,16 +1,5 @@
-import { Resend } from 'resend';
-
-export async function POST(req) {
-  try {
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { name, phone, city, address, cart, total } = await req.json();
-
-    const itemsList = cart && cart.length > 0
-      ? cart.map((item) => `${item.name} x${item.quantity} - Rs. ${item.price}`).join('<br/>')
-      : 'No items in cart';
-
-    const data = await resend.emails.send({
-      from: 'LadyNest Store <onboarding@resend.dev>',
+const data = await resend.emails.send({
+      from: 'LadyNest <onboarding@resend.dev>',
       to: ['ladynest1@gmail.com'],
       subject: `Naya Order Received: ${name}`,
       html: `
@@ -26,9 +15,3 @@ export async function POST(req) {
         <h3>Total Bill: Rs. ${total}</h3>
       `,
     });
-
-    return Response.json({ success: true, data });
-  } catch (error) {
-    return Response.json({ success: false, error: error.message }, { status: 500 });
-  }
-}
