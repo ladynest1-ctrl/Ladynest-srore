@@ -35,14 +35,13 @@ export default function CheckoutPage() {
     const phoneNumber = "923214453830";
     const itemsList = cart.map(item => `${item.name} (${item.selectedColor || 'Standard'}) x${item.quantity || 1}`).join(', ');
     const baseUrl = "https://api.whatsapp.com/send";
-    let message = `Order Details: ${itemsList}`;
-
+    let message = `Order Details: ${itemsList}. Total: Rs. ${total}`;
     window.open(`${baseUrl}?phone=${phoneNumber}&text=${encodeURIComponent(message)}`, '_blank');
   };
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
-    
+
     // 1. Trigger WhatsApp
     handleWhatsAppSend();
 
@@ -53,7 +52,14 @@ export default function CheckoutPage() {
       await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemsList, total }),
+        body: JSON.stringify({ 
+          name: formData.name, 
+          phone: formData.phone, 
+          city: formData.city, 
+          address: formData.address, 
+          itemsList, 
+          total 
+        }),
       });
     } catch (err) {
       console.error("Email send failed:", err);
@@ -81,10 +87,10 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Checkout</h1>
+      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
       <form onSubmit={handleOrderSubmit} className="space-y-4 pt-6 border-t border-black/10">
         <div>
-          <label className="block text-xs uppercase font-bold mb-1">Full Name</label>
+          <label className="block text-xs uppercase font-bold mb-1">Name</label>
           <input
             type="text"
             name="name"
@@ -92,11 +98,11 @@ export default function CheckoutPage() {
             value={formData.name}
             onChange={handleChange}
             className="w-full border p-3 rounded"
-            placeholder="Enter your name"
+            placeholder="Full Name"
           />
         </div>
         <div>
-          <label className="block text-xs uppercase font-bold mb-1">Phone Number</label>
+          <label className="block text-xs uppercase font-bold mb-1">Phone</label>
           <input
             type="text"
             name="phone"
@@ -118,23 +124,15 @@ export default function CheckoutPage() {
             placeholder="Complete address"
           />
         </div>
-
-        <div className="flex justify-between text-[10px] uppercase tracking-[0.2em] text-black font-bold pt-4">
-          <span>Subtotal</span>
-          <span className="text-black font-black">Rs. {subtotal.toLocaleString()}</span>
-        </div>
-        <div className="flex justify-between text-[10px] uppercase tracking-[0.2em] text-black font-bold">
-          <span>Delivery</span>
-          <span className="text-black font-black">Rs. {deliveryCharges}</span>
-        </div>
-        <div className="flex justify-between pt-4 border-t border-black/10">
+        
+        <div className="pt-4 border-t border-black/10">
           <span className="text-[11px] uppercase tracking-[0.3em] font-black text-black">Total Bill</span>
           <span className="text-2xl font-serif text-[#C5A25D] font-bold">Rs. {total.toLocaleString()}</span>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-black text-white py-5 flex items-center justify-center gap-3 font-bold uppercase tracking-wider rounded-md mt-6"
+          className="w-full bg-black text-white py-5 flex items-center justify-center gap-3 font-bold uppercase tracking-[0.3em]"
         >
           Confirm Order & Send Email
         </button>
